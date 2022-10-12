@@ -27,6 +27,7 @@ import string
 import copy
 import random
 import codecs
+import re
 
 # Fonction découpant une chaîne en plusieurs parties
 # Les séparateurs à utiliser sont présents dans une liste
@@ -67,6 +68,10 @@ def divide_string_with_one_sep(s, sep):
 
   return parts
 
+def replace_sous_sur(s):
+  s = re.sub(r'(?<=[\s|-])sur(?=[\s|-])',r"ˢ/", s)
+  s = re.sub(r'(?<=[\s|-])sous(?=[\s|-])',r"ˢ/ₛ", s)
+  return s
 
 # ------------------------------------------------------------------------------
 # Classe gérant le traitement d'un fichier csv
@@ -287,7 +292,11 @@ class NameShortener:
       else:
         last_part_removed = False
 
-    return (complete_name, "".join(short_name_parts), "".join(very_short_name_parts))
+    short_name = "".join(short_name_parts)
+    very_short_name =  "".join(very_short_name_parts)
+    short_name, very_short_name = replace_sous_sur(short_name), replace_sous_sur(very_short_name)
+
+    return (complete_name, short_name, very_short_name)
 
 
 # ------------------------------------------------------------------------------
